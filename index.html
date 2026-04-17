@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Porto Seguro Imóveis — Avaliação</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #080A0F;
+    --surface: #111318;
+    --surface2: #181B22;
+    --border: rgba(255,255,255,0.07);
+    --text1: #F0F2F7;
+    --text2: #8B93A8;
+    --text3: #4A5168;
+    --volt: #C8FF00;
+    --volt-lt: rgba(200,255,0,0.08);
+    --volt-md: rgba(200,255,0,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text1);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Background grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow accent */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(200,255,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+
+  .logo-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--volt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .logo-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    color: var(--text1);
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 8vw, 3rem);
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--text1);
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 span {
+    color: var(--volt);
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  /* Card */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  /* Stars */
+  .stars-section {
+    margin-bottom: 2rem;
+  }
+
+  .stars-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 1rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stars {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .star {
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    position: relative;
+  }
+
+  .star:hover { transform: scale(1.15); }
+  .star:active { transform: scale(0.95); }
+
+  .star svg {
+    width: 100%;
+    height: 100%;
+    transition: all 0.2s ease;
+  }
+
+  .star svg path {
+    fill: var(--surface2);
+    stroke: var(--text3);
+    stroke-width: 1.5;
+    transition: all 0.2s ease;
+  }
+
+  .star.active svg path,
+  .star.hover svg path {
+    fill: var(--volt);
+    stroke: var(--volt);
+  }
+
+  .star-num {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    transition: color 0.2s;
+  }
+
+  .star.active .star-num { color: var(--volt); }
+
+  .stars-wrapper {
+    padding-bottom: 24px;
+  }
+
+  .rating-text {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text2);
+    margin-top: 0.5rem;
+    min-height: 20px;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.3s ease;
+  }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.5rem 0;
+  }
+
+  /* Textarea */
+  .comment-section { margin-bottom: 1.5rem; }
+
+  .comment-section label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 1rem;
+    resize: none;
+    height: 100px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  textarea::placeholder { color: var(--text3); }
+  textarea:focus { border-color: rgba(200,255,0,0.3); }
+
+  /* Quick tags */
+  .tags-section { margin-bottom: 1.5rem; }
+
+  .tags-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .tag:hover { border-color: rgba(200,255,0,0.2); color: var(--text1); }
+
+  .tag.selected {
+    background: var(--volt-md);
+    border-color: rgba(200,255,0,0.4);
+    color: var(--volt);
+  }
+
+  /* Submit button */
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--volt);
+    color: #080A0F;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-submit:hover {
+    background: #d4ff1a;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(200,255,0,0.2);
+  }
+
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-submit:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* Success state */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 2rem 0;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .success-icon {
+    width: 72px;
+    height: 72px;
+    background: var(--volt-md);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    border: 1px solid rgba(200,255,0,0.2);
+  }
+
+  .success-icon svg {
+    width: 36px;
+    height: 36px;
+    stroke: var(--volt);
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .success h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    color: var(--text1);
+  }
+
+  .success p {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+
+  .footer span { color: var(--volt); }
+
+  /* Error */
+  .error-msg {
+    font-size: 12px;
+    color: #ef4444;
+    text-align: center;
+    margin-top: 0.75rem;
+    min-height: 18px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  @media (max-width: 400px) {
+    .card { padding: 1.5rem; }
+    .star { width: 44px; height: 44px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 9.5L12 3L21 9.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V9.5Z" fill="#080A0F" stroke="#080A0F" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="logo-name">PORTO SEGURO IMÓVEIS</div>
+    </div>
+    <h1>Como foi sua<br/><span>visita?</span></h1>
+    <p>Sua opinião nos ajuda a melhorar o atendimento. Leva menos de 1 minuto.</p>
+  </div>
+
+  <div class="card" id="formCard">
+    <!-- Stars -->
+    <div class="stars-section">
+      <div class="stars-label">Sua avaliação geral</div>
+      <div class="stars-wrapper">
+        <div class="stars" id="starsContainer">
+          <div class="star" data-val="1" onclick="setStar(1)" onmouseenter="hoverStar(1)" onmouseleave="unhoverStar()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span class="star-num">1</span>
+          </div>
+          <div class="star" data-val="2" onclick="setStar(2)" onmouseenter="hoverStar(2)" onmouseleave="unhoverStar()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span class="star-num">2</span>
+          </div>
+          <div class="star" data-val="3" onclick="setStar(3)" onmouseenter="hoverStar(3)" onmouseleave="unhoverStar()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span class="star-num">3</span>
+          </div>
+          <div class="star" data-val="4" onclick="setStar(4)" onmouseenter="hoverStar(4)" onmouseleave="unhoverStar()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span class="star-num">4</span>
+          </div>
+          <div class="star" data-val="5" onclick="setStar(5)" onmouseenter="hoverStar(5)" onmouseleave="unhoverStar()">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span class="star-num">5</span>
+          </div>
+        </div>
+        <div class="rating-text" id="ratingText">Selecione uma nota</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Tags -->
+    <div class="tags-section">
+      <div class="tags-label">O que se destacou? <span style="color:var(--text3);font-weight:400">(opcional)</span></div>
+      <div class="tags" id="tagsContainer">
+        <div class="tag" onclick="toggleTag(this, 'atendimento')">👋 Atendimento</div>
+        <div class="tag" onclick="toggleTag(this, 'pontualidade')">⏱ Pontualidade</div>
+        <div class="tag" onclick="toggleTag(this, 'imovel')">🏠 Imóvel</div>
+        <div class="tag" onclick="toggleTag(this, 'clareza')">💬 Clareza</div>
+        <div class="tag" onclick="toggleTag(this, 'rapidez')">⚡ Rapidez</div>
+        <div class="tag" onclick="toggleTag(this, 'profissionalismo')">🤝 Profissionalismo</div>
+      </div>
+    </div>
+
+    <!-- Comment -->
+    <div class="comment-section">
+      <label>Comentário <span style="color:var(--text3);font-weight:400">(opcional)</span></label>
+      <textarea id="comentario" placeholder="Conta pra gente como foi a visita..."></textarea>
+    </div>
+
+    <!-- Submit -->
+    <button class="btn-submit" id="btnSubmit" onclick="submit()" disabled>ENVIAR AVALIAÇÃO</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <!-- Success -->
+  <div class="card success" id="successCard">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2>Obrigado pelo<br/>feedback!</h2>
+    <p>Sua avaliação foi registrada.<br/>Ela nos ajuda a melhorar cada visita.</p>
+  </div>
+
+  <div class="footer">
+    Powered by <span>Glai</span> · Porto Seguro Imóveis
+  </div>
+</div>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────────────
+  const SB_URL = 'https://uqgovwvvdapjsqfzvngc.supabase.co';
+  const SB_KEY = 'sb_publishable_RoAAgSTEMJVaXwoXMjRd9w_DEVs-kR1';
+
+  // Pega parâmetros da URL: ?lead_id=xxx&conversa_id=yyy&corretor_id=7&imovel_codigo=AP0602
+  const params = new URLSearchParams(window.location.search);
+  const LEAD_ID = params.get('lead_id') || null;
+  const CONVERSA_ID = params.get('conversa_id') || null;
+  const CORRETOR_ID = params.get('corretor_id') || null;
+  const IMOVEL_CODIGO = params.get('imovel_codigo') || null;
+
+  // ── STATE ─────────────────────────────────────────────────────
+  let selectedStar = 0;
+  let selectedTags = [];
+
+  const RATINGS = {
+    1: 'Muito ruim 😕',
+    2: 'Ruim 😐',
+    3: 'Regular 🙂',
+    4: 'Bom 😊',
+    5: 'Excelente! 🤩'
+  };
+
+  // ── STARS ─────────────────────────────────────────────────────
+  function setStar(val) {
+    selectedStar = val;
+    updateStars(val);
+    document.getElementById('ratingText').textContent = RATINGS[val];
+    document.getElementById('btnSubmit').disabled = false;
+  }
+
+  function hoverStar(val) {
+    if(selectedStar === 0) updateStars(val, true);
+  }
+
+  function unhoverStar() {
+    if(selectedStar === 0) updateStars(0);
+  }
+
+  function updateStars(val, isHover = false) {
+    document.querySelectorAll('.star').forEach(s => {
+      const starVal = Number(s.dataset.val);
+      s.classList.remove('active', 'hover');
+      if(isHover) {
+        if(starVal <= val) s.classList.add('hover');
+      } else {
+        if(starVal <= val) s.classList.add('active');
+      }
+    });
+  }
+
+  // ── TAGS ──────────────────────────────────────────────────────
+  function toggleTag(el, val) {
+    el.classList.toggle('selected');
+    if(el.classList.contains('selected')) {
+      selectedTags.push(val);
+    } else {
+      selectedTags = selectedTags.filter(t => t !== val);
+    }
+  }
+
+  // ── SUBMIT ────────────────────────────────────────────────────
+  async function submit() {
+    if(!selectedStar) return;
+
+    const btn = document.getElementById('btnSubmit');
+    const errEl = document.getElementById('errorMsg');
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO...';
+    errEl.textContent = '';
+
+    const comentario = document.getElementById('comentario').value.trim();
+
+    const payload = {
+      nota: selectedStar,
+      comentario: comentario || null,
+      tags: selectedTags.length ? selectedTags.join(',') : null,
+      coletado_em: new Date().toISOString(),
+    };
+
+    if(LEAD_ID) payload.lead_id = LEAD_ID;
+    if(CONVERSA_ID) payload.conversa_id = CONVERSA_ID;
+    if(CORRETOR_ID) payload.corretor_id = Number(CORRETOR_ID);
+    if(IMOVEL_CODIGO) payload.imovel_codigo = IMOVEL_CODIGO;
+
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/feedbacks_visita`, {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY,
+          'Authorization': `Bearer ${SB_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if(!res.ok) throw new Error('Erro ao salvar');
+
+      // Sucesso
+      document.getElementById('formCard').style.display = 'none';
+      const sc = document.getElementById('successCard');
+      sc.style.display = 'block';
+
+    } catch(e) {
+      errEl.textContent = 'Erro ao enviar. Tente novamente.';
+      btn.disabled = false;
+      btn.textContent = 'ENVIAR AVALIAÇÃO';
+    }
+  }
+</script>
+</body>
+</html>
