@@ -201,12 +201,15 @@
 
   .star.active .star-num { color: var(--volt); }
 
+  .stars-wrapper {
+    padding-bottom: 24px;
+  }
 
   .rating-text {
     text-align: center;
     font-size: 13px;
     color: var(--text2);
-    margin-top: 3rem;
+    margin-top: 1.5rem;
     min-height: 20px;
     font-family: 'DM Mono', monospace;
     transition: all 0.3s ease;
@@ -296,7 +299,7 @@
     width: 100%;
     padding: 16px;
     background: var(--volt);
-    color: #ffffff;
+    color: #080A0F;
     border: none;
     border-radius: 12px;
     font-family: 'Bebas Neue', sans-serif;
@@ -309,7 +312,7 @@
   }
 
   .btn-submit:hover {
-    background: #1ac6ff;
+    background: #d4ff1a;
     transform: translateY(-1px);
     box-shadow: 0 8px 24px rgba(200,255,0,0.2);
   }
@@ -404,8 +407,10 @@
       </div>
       <div class="logo-name">PORTO SEGURO IMÓVEIS</div>
     </div>
-    <h1>Como foi sua<br/><span>visita?</span></h1>
-    <p>Sua opinião nos ajuda a melhorar o atendimento. Leva menos de 1 minuto.</p>
+    <div id="headerTexts">
+      <h1>Como foi sua<br/><span>visita?</span></h1>
+      <p>Sua opinião nos ajuda a melhorar o atendimento. Leva menos de 1 minuto.</p>
+    </div>
   </div>
 
   <div class="card" id="formCard">
@@ -581,6 +586,7 @@
 
       // Sucesso
       document.getElementById('formCard').style.display = 'none';
+      document.getElementById('headerTexts').style.display = 'none';
       const sc = document.getElementById('successCard');
       sc.style.display = 'block';
 
