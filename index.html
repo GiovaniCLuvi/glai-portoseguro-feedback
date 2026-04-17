@@ -14,9 +14,9 @@
     --text1: #F0F2F7;
     --text2: #8B93A8;
     --text3: #4A5168;
-    --volt: #C8FF00;
-    --volt-lt: rgba(200,255,0,0.08);
-    --volt-md: rgba(200,255,0,0.15);
+    --volt: #1E6FFF;
+    --volt-lt: rgba(30,111,255,0.08);
+    --volt-md: rgba(30,111,255,0.15);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -89,7 +89,7 @@
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: var(--volt);
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -201,15 +201,12 @@
 
   .star.active .star-num { color: var(--volt); }
 
-  .stars-wrapper {
-    padding-bottom: 24px;
-  }
 
   .rating-text {
     text-align: center;
     font-size: 13px;
     color: var(--text2);
-    margin-top: 0.5rem;
+    margin-top: 3rem;
     min-height: 20px;
     font-family: 'DM Mono', monospace;
     transition: all 0.3s ease;
@@ -299,7 +296,7 @@
     width: 100%;
     padding: 16px;
     background: var(--volt);
-    color: #080A0F;
+    color: #ffffff;
     border: none;
     border-radius: 12px;
     font-family: 'Bebas Neue', sans-serif;
@@ -312,7 +309,7 @@
   }
 
   .btn-submit:hover {
-    background: #d4ff1a;
+    background: #1ac6ff;
     transform: translateY(-1px);
     box-shadow: 0 8px 24px rgba(200,255,0,0.2);
   }
@@ -403,9 +400,7 @@
   <div class="header">
     <div class="logo-wrap">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 9.5L12 3L21 9.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V9.5Z" fill="#080A0F" stroke="#080A0F" stroke-width="1.5"/>
-        </svg>
+        <img src="./Logo.jpg" style="width:40px;height:40px;border-radius:10px;object-fit:cover"/>
       </div>
       <div class="logo-name">PORTO SEGURO IMÓVEIS</div>
     </div>
